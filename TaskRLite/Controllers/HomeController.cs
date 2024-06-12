@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TaskRLite.Data;
 using TaskRLite.Models;
 
 namespace TaskRLite.Controllers
@@ -7,14 +8,17 @@ namespace TaskRLite.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly TaskRContext _ctx;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, TaskRContext ctx)
         {
+            _ctx = ctx;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+            var roles = _ctx.AppUserRoles.ToList();
             return View();
         }
 
