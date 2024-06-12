@@ -18,8 +18,10 @@ namespace TaskRLite.Controllers
 
         public IActionResult Index()
         {
+            _ctx.AppUserRoles.Add(new() { RoleName = "SacklPicker" });
+            _ctx.SaveChanges();
             var roles = _ctx.AppUserRoles.ToList();
-            return View();
+            return View(roles);
         }
 
         public IActionResult Privacy()
@@ -31,6 +33,14 @@ namespace TaskRLite.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _ctx.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
