@@ -2,8 +2,12 @@
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite.Core
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
   "ConnectionStrings": {
-    "MyDb": "Filename = C:\\TaskRLite.db"
+    "AppDb": "Filename=TaskRLite.db"
   },
 
+dotnet ef migrations add InitialCreate
+
+dotnet ef database update

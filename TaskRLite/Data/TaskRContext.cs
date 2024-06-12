@@ -7,9 +7,6 @@ namespace TaskRLite.Data
 {
     public class TaskRContext : DbContext
     {
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-        //    => optionsBuilder.UseSqlite("name=AppDb");
-
         public TaskRContext(DbContextOptions<TaskRContext> options) : base(options) { }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppUserRole> AppUserRoles { get; set; }
