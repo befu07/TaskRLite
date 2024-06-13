@@ -8,8 +8,12 @@ namespace TaskRLite.Data
     public class TaskRContext : DbContext
     {
         public TaskRContext(DbContextOptions<TaskRContext> options) : base(options) { }
-        public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<AppUserRole> AppUserRoles { get; set; }
+        public virtual DbSet<AppUserRole> AppUserRoles { get; set; }
+        public virtual DbSet<AppUser> AppUsers { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<TaskItem> TaskItems { get; set; }
+        public virtual DbSet<ToDoList> ToDoLists { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

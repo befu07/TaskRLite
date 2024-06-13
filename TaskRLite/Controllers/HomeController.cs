@@ -18,10 +18,15 @@ namespace TaskRLite.Controllers
 
         public IActionResult Index()
         {
-            _ctx.AppUserRoles.Add(new() { RoleName = "SacklPicker" });
-            _ctx.SaveChanges();
             var roles = _ctx.AppUserRoles.ToList();
             return View(roles);
+        }
+        public IActionResult AddRole()
+        {
+            _ctx.AppUserRoles.Add(new() { RoleName = "SacklPicker" });
+            _ctx.SaveChanges();
+            return RedirectToAction(nameof(Index));
+            return View(nameof(Index));
         }
 
         public IActionResult Privacy()
