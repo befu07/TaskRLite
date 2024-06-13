@@ -13,7 +13,7 @@ namespace TaskRLite.Data
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<TaskItem> TaskItems { get; set; }
         public virtual DbSet<ToDoList> ToDoLists { get; set; }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite("Name=AppDb");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

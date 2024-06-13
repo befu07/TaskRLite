@@ -12,12 +12,12 @@ namespace TaskRLite
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            //builder.Services.AddDbContext<TaskRContext>();
+            builder.Services.AddDbContext<TaskRContext>();
 
-            builder.Services.AddDbContext<TaskRContext>(options =>
-            {
-                options.UseSqlite("Name=AppDb");
-            });
+            //builder.Services.AddDbContext<TaskRContext>(options =>
+            //{
+            //    options.UseSqlite("Name=AppDb");
+            //});
 
 
             var app = builder.Build();
