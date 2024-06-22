@@ -1,0 +1,52 @@
+﻿@model TDLDetailsVm
+
+<h2>Tasks für Liste: @Model.Name</h2>
+<h6><a href="/ToDo/Index">Zurück zu Übersicht</a></h6>
+<table class="table-success table">
+    <thead>
+        <tr>
+            <th scope="col">Descripton</th>
+            <th scope="col">Urgent?</th>
+            <th scope="col">IsCompleted</th>
+            <th scope="col">CreatedOn</th>
+            @* <th scope="col">CompletedOn</th> *@
+            <th scope="col">Deadline</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Tags</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Tasks)
+        {
+            bool isUrgent = item.IsUrgent();
+            string stlyestring = !isUrgent ? String.Empty : @"class=table-danger";
+            @* string stlyestring = isUrgent ? @"style=background-color:lightpink" : ""; *@
+            @* var urgentstyle = isUrgent ? "style='background-color:lightpink'" : String.Empty; *@
+            <tr @stlyestring>
+                <th scope="row">@item.Description</th>
+                <th scope="row">@isUrgent</th>
+                <td>@item.IsCompleted</td>
+                <td>@item.CreatedOn</td>
+                @* <td>@item.CompletedOn</td> *@
+                <td>@item.Deadline?.ToString("d")</td>
+                <td>@item.Priority</td>
+                <td>
+                    @foreach (var t in item.Tags)
+                    {
+                        <span style="background-color:#@t.HexColor;"> @t.Name</span>
+                        <br />
+                    }
+                </td>
+                <td>
+                    <a>Abschließen</a><br />
+                    <a>Details</a><br />
+                    <a>Löschen</a><br />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/ToDo/CreateTask/@Model.Id">Create Task</a>

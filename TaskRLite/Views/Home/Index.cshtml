@@ -1,31 +1,28 @@
-﻿@using TaskRLite.Data
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model List<AppUserRole>
 
-<div class="text-center">
+@* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div> *@
+@if (User.Identity.IsAuthenticated)
+{
+    <h3>Hallo, @User.Identity.Name!</h3>
 
-<table>
-    <tr>
-        <td></td>
-        <td></td>
-        <td>
-            <a href="/Home/AddRole" class="btn btn-sm btn-success">+</a>
-        </td>
-    </tr>
-    @foreach (var role in Model)
-    {
-        <tr>
-            <td>
-                @role.Id
-            </td>
-            <td>
-                @role.RoleName
-            </td>
-        </tr>
-    }
-</table>
+    <h4>
+        Hier geht es zu deiner   <a href="/ToDo">Übersicht</a>
+    </h4>
+}
+else
+{
+    <h2>
+        Hallo, Unbekannnte(r) ! <br />
+    </h2>
+    <h4>
+        Möchtest du dich <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="/Auth/Register">registrieren</a><br />
+        oder <br />
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="/Auth/Login">einloggen?</a> ?
+    </h4>
+}

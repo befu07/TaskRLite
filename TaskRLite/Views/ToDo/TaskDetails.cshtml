@@ -1,0 +1,121 @@
+﻿@model CreateTaskVm
+<h6><a href="/ToDo/TDLDetails/@Model.ToDoListId">Zurück zu Liste</a></h6>
+<br />
+
+<div class="container">
+    <form action="/ToDo/TaskUpdate" method="post">
+
+        <input name="Id" hidden value="@Model.Id" />
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                ToDoList:
+            </div>
+            <div class="col-md-9">
+                <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                Description:
+            </div>
+            <div class="col-md-9">
+                <textarea style="width:100%" type="text" name="Descripton">@Model.Descripton</textarea>
+            </div>
+            <div class="col-md-12">
+                <span asp-validation-for="Descripton" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                Deadline:
+            </div>
+            <div class="col-md-9">
+                <input style="width:100%" type="datetime-local" name="Deadline" value="@Model.DeadlineInputString" />
+            </div>
+            <div class="col-md-12">
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                Priorität:
+            </div>
+            <div class="col-md-9">
+                <select class="form-control" asp-for="@Model.Priority" asp-items="@Model.SelectListItems_Priorities"></select>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label class="control-label col-md-3" for="Tags">
+                Tags:
+            </label>
+
+            <div class="col-md-9">
+                <select class="form-control" multiple name="SelectedTagIds">
+                    @foreach (var tag in Model.TagsDict)
+                    {
+                        var isSelected = Model.SelectedTagIds.Any(o => o == tag.Key);
+                        if (isSelected)
+                        {
+                            <option style="background-color:#@tag.Value.HexColor" value="@tag.Key" selected>@tag.Value.Name</option>
+                        }
+                        else
+                        {
+                            <option style="background-color:#@tag.Value.HexColor" value="@tag.Key">@tag.Value.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                IsCompleted:
+            </div>
+            <div class="col-md-3">
+                @{
+                    var statusString = @Model.IsCompleted ? "checked" : "";
+                }
+                <input type="checkbox" name="IsCompletedString" @statusString />
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-3">
+                CompletedOn:
+            </div>
+            <div class="col-md-9">
+                @if (Model.CompletedOn.HasValue)
+                {
+                    <span>@Model.CompletedOn!.Value.ToString("G")</span>
+                }
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                CreatedOn:
+            </div>
+            <div class="col-md-9">
+                <span>@Model.CreatedOn.ToString("G")</span>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                <input type="submit" value="Speichern" />
+            </div>
+            <div class="col-md-3">
+                <a href="/ToDo/TaskDelete/@Model.Id?listID=@Model.ToDoListId" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
+            </div>
+        </div>
+    </form>
+    <br />
+    <span style="color:red">
+        @TempData["ErrorMessage"]
+    </span>
+    @* @ViewBag.ErrorMessage *@
+</div>

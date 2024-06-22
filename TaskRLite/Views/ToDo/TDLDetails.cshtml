@@ -1,0 +1,142 @@
+﻿@using static TaskRLite.Services.ToDoListService
+@model TDLDetailsVm
+
+<h2>Tasks für Liste: @Model.Name</h2>
+<div>
+    <span style="color:red">@TempData["ErrorMessage"]</span>
+    <span style="color:green">@TempData["SuccessMessage"]</span>
+    <span style="color:green">@TempData["DeleteMessage"]</span>
+</div>
+<h6><a href="/ToDo/Index">Zurück zu Übersicht</a></h6>
+
+<h4>Filtern & Suchen</h4>
+<form action="/ToDo/TDLDetails/@Model.Id" method="post" class="m-2">
+    <div class="row m-3">
+        <div class="col-1">
+            <label class="col-2">
+                Filter:
+            </label>
+        </div>
+        <div class="col-2">
+            <select asp-for="Filter"
+                    class="form-control"
+                    asp-items="Html.GetEnumSelectList<TaskFilter>()">
+            </select>
+        </div>
+        <div class="col-1">
+            <label class="col-2">
+                Suchtext:
+            </label>
+        </div>
+        <div class="col-2">
+            <input type="text" name="Query" class="form-control col-2" value="@Model.Query" />
+        </div>
+    </div>
+    <div class="row m-3">
+        <div class="col-2">
+            <input type="submit" value="Filter anwenden" />
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        @if (Model.Tasks.Any())
+        {
+            
+        }
+        @if (Model.Tasks.Where(o => !o.IsCompleted).Any())
+        {
+            <tr>
+                <th scope="col" style="width:70px"></th>
+                <th scope="col">Descripton</th>
+                <th scope="col">CreatedOn</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Tags</th>
+                <th scope="col"></th>
+            </tr>
+        }
+        @foreach (var item in Model.Tasks.Where(o => !o.IsCompleted))
+        {
+            bool isUrgent = item.IsUrgent();
+            string urgentFlag = String.Empty;
+            string stlyestring = String.Empty;
+            if (isUrgent)
+            {
+                urgentFlag = @"!!! ";
+                stlyestring = @"class=table-danger";
+            };
+            <tr @stlyestring>
+                <td scope="row">@urgentFlag</td>
+                <td scope="row">@item.Description</td>
+                <td>@item.CreatedOn.ToString("g")</td>
+                <td>@item.Deadline?.ToString("d")</td>
+                <td>
+                    <form action="/ToDo/TaskPriorityUpdate" method="post">
+                        <input hidden name="tdlid" value="@Model.Id" />
+                        <input hidden name="id" value="@item.Id" />
+                        <select name="Priority" onchange="this.form.submit()">
+                            <option selected="@(item.Priority == 1)" value="1">Höchste</option>
+                            <option selected="@(item.Priority == 2)" value="2">Hoch</option>
+                            <option selected="@(item.Priority == 3)" value="3">Normal</option>
+                            <option selected="@(item.Priority == 4)" value="4">Niedrig</option>
+                            <option selected="@(item.Priority == 5)" value="5">Keine</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    @foreach (var t in item.Tags)
+                    {
+                        <span style="background-color:#@t.HexColor;"> @t.Name</span>
+                        <br />
+                    }
+                </td>
+                <td>
+                    <a href="/ToDo/TaskDetails/@item.Id" class="btn btn-sm btn-info">Details</a>
+                    <a href="/ToDo/TaskDelete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
+                    <a href="/ToDo/TaskComplete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-success" onclick="return confirm('Aufgabe abschließen?')">Abschließen</a>
+                </td>
+            </tr>
+        }
+        @if (Model.Tasks.Where(o => o.IsCompleted).Any())
+        {
+            <tr>
+                <th scope="col" style="width:70px"></th>
+                <th scope="col">Descripton</th>
+                <th scope="col">CreatedOn</th>
+                <th scope="col">CompletedOn</th>
+                <th scope="col"></th>
+                <th scope="col">Tags</th>
+                <th scope="col"></th>
+            </tr>
+        }
+        @foreach (var item in Model.Tasks.Where(o => o.IsCompleted).OrderByDescending(o=>o.CompletedOn).ToList())
+        {
+            <tr class=table-success>
+                <td></td>
+                <td>@item.Description</td>
+                <td>@item.CreatedOn.ToString("g")</td>
+                <td>@item.CompletedOn?.ToString("d")</td>
+                <td>@item.Priority</td>
+                <td>
+                    @foreach (var t in item.Tags)
+                    {
+                        <span style="background-color:#@t.HexColor;"> @t.Name</span>
+                        <br />
+                    }
+                </td>
+                <td>
+                    @* <a href="/ToDo/TaskDetails/@item.Id" class="btn btn-sm btn-info">Edit</a> *@
+                    <a href="/ToDo/TaskDelete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<a href="/ToDo/CreateTask/@Model.Id" class="btn btn-sm btn-success" >Create Task</a>
+<a href="/ToDo/DeleteCompleted/@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Abgeschlossene Aufgaben löschen?')">Delete Completed</a>

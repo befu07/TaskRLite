@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TaskRLite.Data;
 using TaskRLite.Models;
 
 namespace TaskRLite.Controllers
@@ -8,25 +7,16 @@ namespace TaskRLite.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly TaskRContext _ctx;
+        public static string Name = nameof(HomeController).Replace("Controller", null);
 
-        public HomeController(ILogger<HomeController> logger, TaskRContext ctx)
+        public HomeController(ILogger<HomeController> logger)
         {
-            _ctx = ctx;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            var roles = _ctx.AppUserRoles.ToList();
-            return View(roles);
-        }
-        public IActionResult AddRole()
-        {
-            _ctx.AppUserRoles.Add(new() { RoleName = "SacklPicker" });
-            _ctx.SaveChanges();
-            return RedirectToAction(nameof(Index));
-            return View(nameof(Index));
+            return View();
         }
 
         public IActionResult Privacy()
@@ -38,14 +28,6 @@ namespace TaskRLite.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _ctx.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

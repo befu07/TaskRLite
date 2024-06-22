@@ -1,0 +1,22 @@
+﻿@model TaskRLite.Views.Auth.RegisterVm
+
+<h2>REGISTER</h2>
+
+<form action="/Auth/Register" method="post">
+    @Html.TextBoxFor(e => e.Username, new { @class = "form-control", placeholder = "Your UserName *" })
+    @Html.ValidationMessageFor(e => e.Username)
+
+    @Html.TextBoxFor(e => e.Email, new { @class = "form-control", placeholder = "Your Email *" })
+    @Html.ValidationMessageFor(e => e.Email)
+
+    @Html.PasswordFor(e => e.Password, new { @class = "form-control", placeholder = "Password *" })
+    @Html.ValidationMessageFor(e => e.Password)
+
+    @Html.PasswordFor(e => e.PasswordConfirm, new { @class = "form-control", placeholder = "Confirm Password *" })
+    @Html.ValidationMessageFor(e => e.PasswordConfirm)
+    <br/>
+
+    <button type="submit" class="btn btn-primary">Registrieren</button>
+</form>
+<h4 color="red">@TempData["ErrorMessage"]</h4>
+
